@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>蕊蕊天天开心</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+      font-family: "Microsoft YaHei", sans-serif;
+      overflow: hidden;
+    }
+    .note {
+      position: absolute;
+      padding: 20px 26px;
+      border-radius: 18px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      color: #333;
+      font-size: 20px;
+      line-height: 1.6;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .heart {
+      display: inline-block;
+      margin-right: 6px;
+      color: #e91e63;
+      font-size: 22px;
+    }
+    
+    /* 微信手机端专属优化 */
+    @media (max-width: 768px) {
+      .note {
+        font-size: 24px;
+        padding: 24px 30px;
+        border-radius: 22px;
+      }
+      .heart {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  
+  <script>
+    const notes = [
+      "我想你了",
+      "天冷了，多穿衣服",
+      "今天过得开心嘛",
+      "保持好心情",
+      "别熬夜",
+      "记得吃水果",
+      "早点休息",
+      "要相信自己奥",
+      "每天都要元气满满",
+      "顺顺利利",
+      "金榜题名",
+      "愿所有烦恼都消失",
+      "保持微笑呀",
+      "珍惜每一刻",
+      "好好爱自己",
+      "学会爱自己，才能更好地爱别人",
+      "梦想成真",
+      "别太累啦，偶尔偷懒也好",
+      "期待下一次见面",
+      "多喝水哦~"
+    ];
+    
+    const colors = [
+      "rgba(255, 220, 225, 0.8)",
+      "rgba(220, 255, 225, 0.8)",
+      "rgba(220, 220, 255, 0.8)",
+      "rgba(255, 240, 220, 0.8)",
+      "rgba(255, 250, 220, 0.8)"
+    ];
+    
+    const container = document.getElementById('container');
+    let index = 0;
+    
+    function createNote() {
+      if (index >= notes.length) {
+        const endNote = document.createElement('div');
+        endNote.className = 'note';
+        endNote.style.backgroundColor = 'rgba(255, 192, 203, 0.9)';
+        endNote.style.left = '50%';
+        endNote.style.top = '50%';
+        endNote.style.transform = 'translate(-50%, -50%)';
+        endNote.style.fontSize = '26px';
+        endNote.style.fontWeight = 'bold';
+        endNote.innerHTML = '<span class="heart">❤️</span>蕊蕊天天开心';
+        container.appendChild(endNote);
+        return;
+      }
+      
+      const note = document.createElement('div');
+      note.className = 'note';
+      note.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      note.style.left = `${Math.random() * 70 + 10}%`;
+      note.style.top = `${Math.random() * 70 + 10}%`;
+      note.innerHTML = `<span class="heart">❤️</span>${notes[index]}`;
+      container.appendChild(note);
+      
+      index++;
+      setTimeout(createNote, 500);
+    }
+    
+    createNote();
+  </script>
+</body>
+</html>
