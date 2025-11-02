@@ -21,7 +21,7 @@
       font-size: 16px;
       line-height: 1.6;
       animation: fadeIn 0.6s ease-in-out;
-      max-width: 50%;
+      max-width: 45%;
       box-sizing: border-box;
     }
     @keyframes fadeIn {
@@ -41,7 +41,7 @@
         font-size: 18px;
         padding: 20px 26px;
         border-radius: 18px;
-        max-width: 60%;
+        max-width: 55%;
       }
       .heart {
         font-size: 20px;
@@ -88,25 +88,37 @@
     const usedPositions = [];
     let index = 0;
     
-    // 智能均匀分布算法（无重叠，无大片空白）
-    function getEvenPosition(elementWidth, elementHeight) {
-      const padding = 8;  // 减少间距，增加密度
-      const cols = 4;     // 增加列数
-      const rows = 5;     // 增加行数
+    // 智能无重叠布局算法
+    function getPosition(elementWidth, elementHeight) {
+      const padding = 10;
+      let left, top;
+      let attempts = 0;
+      const maxAttempts = 50;
       
-      // 计算网格大小
-      const colWidth = (100 - padding * (cols - 1)) / cols;
-      const rowHeight = (100 - padding * (rows - 1)) / rows;
+      while (attempts < maxAttempts) {
+        left = Math.random() * (100 - elementWidth - padding);
+        top = Math.random() * (100 - elementHeight - padding);
+        
+        const overlaps = usedPositions.some(pos => {
+          return !(left + elementWidth < pos.left || 
+                  left > pos.left + pos.width || 
+                  top + elementHeight < pos.top || 
+                  top > pos.top + pos.height);
+        });
+        
+        if (!overlaps) {
+          usedPositions.push({ left, top, width: elementWidth, height: elementHeight });
+          return { left, top };
+        }
+        
+        attempts++;
+      }
       
-      // 随机选择一个网格
-      const col = Math.floor(Math.random() * cols);
-      const row = Math.floor(Math.random() * rows);
-      
-      // 计算位置
-      const left = col * (colWidth + padding);
-      const top = row * (rowHeight + padding);
-      
-      return { left, top };
+      // 如果多次尝试失败，直接使用随机位置（确保不超出屏幕）
+      return {
+        left: Math.random() * (100 - elementWidth),
+        top: Math.random() * (100 - elementHeight)
+      };
     }
     
     function createNote() {
@@ -139,7 +151,7 @@
       const elementHeight = rect.height / window.innerHeight * 100;
       
       note.style.display = 'block';
-      const pos = getEvenPosition(elementWidth, elementHeight);
+      const pos = getPosition(elementWidth, elementHeight);
       note.style.left = `${pos.left}%`;
       note.style.top = `${pos.top}%`;
       
