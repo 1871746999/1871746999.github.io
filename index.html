@@ -14,14 +14,14 @@
     }
     .note {
       position: absolute;
-      padding: 20px 26px;
+      padding: 18px 24px;
       border-radius: 16px;
       box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
       color: #333;
-      font-size: 18px;
+      font-size: 16px;
       line-height: 1.6;
       animation: fadeIn 0.6s ease-in-out;
-      max-width: 60%;
+      max-width: 50%;
       box-sizing: border-box;
     }
     @keyframes fadeIn {
@@ -32,19 +32,19 @@
       display: inline-block;
       margin-right: 6px;
       color: #e91e63;
-      font-size: 20px;
+      font-size: 18px;
     }
     
     /* 微信手机端专属优化 */
     @media (max-width: 768px) {
       .note {
-        font-size: 20px;
-        padding: 22px 28px;
+        font-size: 18px;
+        padding: 20px 26px;
         border-radius: 18px;
-        max-width: 70%;
+        max-width: 60%;
       }
       .heart {
-        font-size: 22px;
+        font-size: 20px;
       }
     }
   </style>
@@ -88,11 +88,11 @@
     const usedPositions = [];
     let index = 0;
     
-    // 智能均匀分布算法（避免重叠，减少空白）
+    // 智能均匀分布算法（无重叠，无大片空白）
     function getEvenPosition(elementWidth, elementHeight) {
-      const padding = 15; // 元素间最小间距
-      const cols = 3;     // 列数
-      const rows = 4;     // 行数
+      const padding = 8;  // 减少间距，增加密度
+      const cols = 4;     // 增加列数
+      const rows = 5;     // 增加行数
       
       // 计算网格大小
       const colWidth = (100 - padding * (cols - 1)) / cols;
@@ -144,7 +144,7 @@
       note.style.top = `${pos.top}%`;
       
       index++;
-      setTimeout(createNote, 400);
+      setTimeout(createNote, 350);
     }
     
     createNote();
