@@ -88,27 +88,31 @@
     const usedPositions = [];
     let index = 0;
     
-    // 智能无重叠布局算法
+    // 智能无重叠布局算法（不同高度均匀分布）
     function getPosition(elementWidth, elementHeight) {
-      const padding = 10;
+      const padding = 15;
       let left, top;
       let attempts = 0;
       const maxAttempts = 50;
       
       while (attempts < maxAttempts) {
+        // 增加垂直方向的随机性
         left = Math.random() * (100 - elementWidth - padding);
         top = Math.random() * (100 - elementHeight - padding);
         
-        const overlaps = usedPositions.some(pos => {
-          return !(left + elementWidth < pos.left || 
-                  left > pos.left + pos.width || 
-                  top + elementHeight < pos.top || 
-                  top > pos.top + pos.height);
-        });
-        
-        if (!overlaps) {
-          usedPositions.push({ left, top, width: elementWidth, height: elementHeight });
-          return { left, top };
+        // 确保左右两侧都有内容
+        if (left < 30 || left > 70) {
+          const overlaps = usedPositions.some(pos => {
+            return !(left + elementWidth < pos.left || 
+                    left > pos.left + pos.width || 
+                    top + elementHeight < pos.top || 
+                    top > pos.top + pos.height);
+          });
+          
+          if (!overlaps) {
+            usedPositions.push({ left, top, width: elementWidth, height: elementHeight });
+            return { left, top };
+          }
         }
         
         attempts++;
