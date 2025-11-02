@@ -14,15 +14,14 @@
     }
     .note {
       position: absolute;
-      padding: 24px 30px;
-      border-radius: 22px;
+      padding: 20px 26px;
+      border-radius: 16px;
       box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
       color: #333;
-      font-size: 24px;
+      font-size: 18px;
       line-height: 1.6;
       animation: fadeIn 0.6s ease-in-out;
-      max-width: 60%; /* 避免提示框过宽 */
-      max-height: 20%; /* 限制高度 */
+      max-width: 60%;
       box-sizing: border-box;
     }
     @keyframes fadeIn {
@@ -31,21 +30,21 @@
     }
     .heart {
       display: inline-block;
-      margin-right: 8px;
+      margin-right: 6px;
       color: #e91e63;
-      font-size: 28px;
+      font-size: 20px;
     }
     
     /* 微信手机端专属优化 */
     @media (max-width: 768px) {
       .note {
-        font-size: 26px;
-        padding: 28px 34px;
-        border-radius: 24px;
+        font-size: 20px;
+        padding: 22px 28px;
+        border-radius: 18px;
         max-width: 70%;
       }
       .heart {
-        font-size: 30px;
+        font-size: 22px;
       }
     }
   </style>
@@ -86,7 +85,29 @@
     ];
     
     const container = document.getElementById('container');
+    const usedPositions = [];
     let index = 0;
+    
+    // 智能均匀分布算法
+    function getEvenPosition(elementWidth, elementHeight) {
+      const padding = 10; // 减少间距，增加分布密度
+      const cols = 3;     // 列数
+      const rows = 4;     // 行数
+      
+      // 计算网格大小
+      const colWidth = (100 - padding * (cols - 1)) / cols;
+      const rowHeight = (100 - padding * (rows - 1)) / rows;
+      
+      // 随机选择一个网格
+      const col = Math.floor(Math.random() * cols);
+      const row = Math.floor(Math.random() * rows);
+      
+      // 计算位置
+      const left = col * (colWidth + padding);
+      const top = row * (rowHeight + padding);
+      
+      return { left, top };
+    }
     
     function createNote() {
       if (index >= notes.length) {
@@ -96,7 +117,7 @@
         endNote.style.left = '50%';
         endNote.style.top = '50%';
         endNote.style.transform = 'translate(-50%, -50%)';
-        endNote.style.fontSize = '30px';
+        endNote.style.fontSize = '22px';
         endNote.style.fontWeight = 'bold';
         endNote.innerHTML = '<span class="heart">❤️</span>蕊蕊天天开心';
         container.appendChild(endNote);
@@ -106,18 +127,26 @@
       const note = document.createElement('div');
       note.className = 'note';
       note.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-      // 扩大位置范围，覆盖整个屏幕（5%-90%），避免边缘空白
-      note.style.left = `${Math.random() * 85 + 5}%`;
-      note.style.top = `${Math.random() * 85 + 5}%`;
+      
+      // 获取元素尺寸
+      note.style.display = 'inline-block';
       note.innerHTML = `<span class="heart">❤️</span>${notes[index]}`;
       container.appendChild(note);
       
+      const rect = note.getBoundingClientRect();
+      const elementWidth = rect.width / window.innerWidth * 100;
+      const elementHeight = rect.height / window.innerHeight * 100;
+      
+      note.style.display = 'block';
+      const pos = getEvenPosition(elementWidth, elementHeight);
+      note.style.left = `${pos.left}%`;
+      note.style.top = `${pos.top}%`;
+      
       index++;
-      setTimeout(createNote, 500);
+      setTimeout(createNote, 400);
     }
     
     createNote();
   </script>
 </body>
 </html>
-
