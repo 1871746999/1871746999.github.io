@@ -85,15 +85,29 @@
     ];
     
     const container = document.getElementById('container');
+    const usedPositions = [];
     let index = 0;
     
-    // 定义四个角落的初始位置
-    const corners = [
-      { left: '10%', top: '10%' },    // 左上角
-      { left: '70%', top: '10%' },    // 右上角
-      { left: '10%', top: '70%' },    // 左下角
-      { left: '70%', top: '70%' }     // 右下角
-    ];
+    // 智能均匀分布算法（避免重叠，减少空白）
+    function getEvenPosition(elementWidth, elementHeight) {
+      const padding = 15; // 元素间最小间距
+      const cols = 3;     // 列数
+      const rows = 4;     // 行数
+      
+      // 计算网格大小
+      const colWidth = (100 - padding * (cols - 1)) / cols;
+      const rowHeight = (100 - padding * (rows - 1)) / rows;
+      
+      // 随机选择一个网格
+      const col = Math.floor(Math.random() * cols);
+      const row = Math.floor(Math.random() * rows);
+      
+      // 计算位置
+      const left = col * (colWidth + padding);
+      const top = row * (rowHeight + padding);
+      
+      return { left, top };
+    }
     
     function createNote() {
       if (index >= notes.length) {
@@ -115,13 +129,19 @@
       note.className = 'note';
       note.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
       
-      // 按顺序从四个角落出现
-      const cornerIndex = index % 4;
-      note.style.left = corners[cornerIndex].left;
-      note.style.top = corners[cornerIndex].top;
-      
+      // 获取元素尺寸
+      note.style.display = 'inline-block';
       note.innerHTML = `<span class="heart">❤️</span>${notes[index]}`;
       container.appendChild(note);
+      
+      const rect = note.getBoundingClientRect();
+      const elementWidth = rect.width / window.innerWidth * 100;
+      const elementHeight = rect.height / window.innerHeight * 100;
+      
+      note.style.display = 'block';
+      const pos = getEvenPosition(elementWidth, elementHeight);
+      note.style.left = `${pos.left}%`;
+      note.style.top = `${pos.top}%`;
       
       index++;
       setTimeout(createNote, 400);
